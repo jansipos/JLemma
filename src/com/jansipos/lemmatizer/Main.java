@@ -25,7 +25,7 @@ public class Main {
 		long end = System.currentTimeMillis();
 		System.out.println(end - start);
 		
-		FileUtils.cleanDirectory(new File("res/text/test/out"));
+//		FileUtils.cleanDirectory(new File("res/text/test/out"));
 	}
 }
 
