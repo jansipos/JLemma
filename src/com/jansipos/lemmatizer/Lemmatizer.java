@@ -58,14 +58,12 @@ public final class Lemmatizer {
 			for (String word : words) {
 
 				try {
-					if (word.endsWith("que") && !SET_QUE_WORDS.contains(word)){ // ako que nije dio leme
-						System.out.println(word);
+					if (word.endsWith("que") && !SET_QUE_WORDS.contains(word)){ // ako 'que' nije dio leme
+						word = word.substring(0, word.length()-3); // ukloni 'que' na kraju riječi
 					}
-					else {
 						
-						Entry entry = dictionary.get(word);
-						sb.append(entry.getLemma() + "\n");
-					}
+					Entry entry = dictionary.get(word);
+					sb.append(entry.getLemma() + "\n");
 				} catch (NullPointerException e) {
 					// System.out.println(word);
 					i++;
