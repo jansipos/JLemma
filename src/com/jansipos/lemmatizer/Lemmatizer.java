@@ -29,6 +29,9 @@ public final class Lemmatizer {
 
 	private static final String[] LIST_QUE_WORDS = new String[] {"absque", "abusque", "adaeque", "adque", "adusque", "aeque", "alterutraque", "alterutrique", "antique", "apsque", "atque", "circumquaque", "circumundique", "conseque", "coque", "cuiusmodicumque", "cumque", "cuncumque", "denique", "deque", "hocusque", "hucusque", "itaque", "iamiamque", "longinque", "namque", "neque", "peraeque", "plerumque", "quacumque", "quacunque", "qualitercumque", "qualitercunque", "quandiucumque", "quandocumque", "quandocunque", "quandoque", "quantumcumque", "quinque", "quoadusque", "quocumque", "quocunque", "quomodocumque", "quomodocunque", "quoque", "quoquomque", "quotcumque", "quotcunque", "quotienscumque", "quotienscunque", "quotiensquonque", "quotiescumque", "quotiescunque", "quotiesquonque", "quotusquisque", "quousque", "sesque", "simulatque", "susque", "ubicumque", "ubiquaque", "ubique", "ubiquomque", "undecumque", "undique", "usque", "usquequaque", "utcumque", "utcunque", "utique", "utquomque", "utrimque", "utrinque", "utrobique", "utroque", "utrubique"};
 	private static final Set<String> SET_QUE_WORDS = new HashSet<String>(Arrays.asList(LIST_QUE_WORDS));
+	
+	private static final String[] LIST_STOP_WORDS = new String[] {"prijedlog", "veznik", "zamjenica", "glagol-biti"};
+	private static final Set<String> SET_STOP_WORDS = new HashSet<String>(Arrays.asList(LIST_STOP_WORDS));
 
 	private Lemmatizer() {
 		dictionary = POSLemmaList.getInstance().getDictionary();
@@ -66,8 +69,16 @@ public final class Lemmatizer {
 					}
 
 					Entry entry = dictionary.get(word);
+					
 					String lemma = entry.getLemma().toString();
+					String POS = entry.getPOS();
+					
+					// izbacuje prijedloge, veznike, zamjenice i glagol biti
+					if (SET_STOP_WORDS.contains(POS)) {
+						continue;
+					}
 
+					
 					if (results.containsKey(lemma)) { // ako je ta lema već viđena
 						results.put(lemma, results.get(lemma) + 1); // dodaj 1 na broj pojavaka
 					}
@@ -117,9 +128,10 @@ public final class Lemmatizer {
 
 		public int compare(String a, String b) {
 			
-			if (base.get(a) >= base.get(b))
+			if (base.get(a) >= base.get(b)) {
+				
 				return -1; // sortira od najvećeg prema najmanjem
-			
+			}
 			return 1;
 		}
 	}
