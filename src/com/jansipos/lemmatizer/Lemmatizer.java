@@ -14,6 +14,7 @@ import java.util.Set;
 import java.util.TreeMap;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
 
 public final class Lemmatizer {
 
@@ -32,6 +33,9 @@ public final class Lemmatizer {
 	
 	private static final String[] LIST_STOP_WORDS = new String[] {"prijedlog", "veznik", "zamjenica", "glagol-biti"};
 	private static final Set<String> SET_STOP_WORDS = new HashSet<String>(Arrays.asList(LIST_STOP_WORDS));
+
+	private static final String[] ARRAY_SEARCH = new String[] {"J", "j", "V", "v", "Ā", "Ē", "Ī", "Ō", "Ū", "Ă", "Ĕ", "Ĭ", "Ŏ", "Ŭ", "ă", "ĕ", "ĭ", "ŏ", "ŭ", "ā", "ē", "ī", "ō", "ū", "ȳ", "ä", "ë", "ï", "ö", "ü", "á", "é", "í", "ó", "ú", "à", "è", "ì", "ò", "ù", "â", "ê", "î", "ô", "û", "Ê"};
+	private static final String[] ARRAY_REPLACE = new String[] {"I", "i", "U", "u", "A", "E", "I", "O", "U", "A", "E", "I", "O", "U", "a", "e", "i", "o", "u", "a", "e", "i", "o", "u", "y", "a", "e", "i", "o", "u", "a", "e", "i", "o", "u", "a", "e", "i", "o", "u", "a", "a", "i", "o", "u", "A"};
 
 	private Lemmatizer() {
 		dictionary = POSLemmaList.getInstance().getDictionary();
@@ -59,9 +63,20 @@ public final class Lemmatizer {
 		}
 
 		for (String line : lines) {
+			
+			if(line.isEmpty()) {
+				continue;
+			}
+			
+			line = normalize(line);
+			
 			String[] words = line.split(" ");
 
 			for (String word : words) {
+				
+				if(word.isEmpty()) {
+					continue;
+				}
 
 				try {
 					if (word.endsWith("que") && !SET_QUE_WORDS.contains(word)){ // ako 'que' nije dio leme
@@ -93,6 +108,18 @@ public final class Lemmatizer {
 		}
 		printResults();
 		System.out.println("Number of unknown forms: " + unknown);
+	}
+
+	private String normalize(String line) {
+		
+		String l = line;
+		
+		l = StringUtils.strip(l);
+		l = StringUtils.replaceEachRepeatedly(l, ARRAY_SEARCH, ARRAY_REPLACE);
+		l = StringUtils.lowerCase(l);
+		l = StringUtils.replacePattern(l, "[^a-z ]", "");
+		
+		return l;
 	}
 
 	private void printResults() {
