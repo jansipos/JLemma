@@ -18,13 +18,14 @@ import org.apache.commons.lang3.StringUtils;
 
 public final class Lemmatizer {
 
-	private static String dirOut = "res/out.txt";
-
 	private static Map<String, Entry> dictionary;
-	private static Map<String, Integer> results;
 
-	private static List<String> lines;
-	private static int unknown;
+	private String dirOut = "res/out";
+
+	private Map<String, Integer> results;
+
+	private List<String> lines;
+	private int unknown;
 
 	public static Lemmatizer instance;
 
@@ -37,20 +38,13 @@ public final class Lemmatizer {
 	private static final String[] ARRAY_SEARCH = new String[] {"J", "j", "V", "v", "Ā", "Ē", "Ī", "Ō", "Ū", "Ă", "Ĕ", "Ĭ", "Ŏ", "Ŭ", "ă", "ĕ", "ĭ", "ŏ", "ŭ", "ā", "ē", "ī", "ō", "ū", "ȳ", "ä", "ë", "ï", "ö", "ü", "á", "é", "í", "ó", "ú", "à", "è", "ì", "ò", "ù", "â", "ê", "î", "ô", "û", "Ê"};
 	private static final String[] ARRAY_REPLACE = new String[] {"I", "i", "U", "u", "A", "E", "I", "O", "U", "A", "E", "I", "O", "U", "a", "e", "i", "o", "u", "a", "e", "i", "o", "u", "y", "a", "e", "i", "o", "u", "a", "e", "i", "o", "u", "a", "e", "i", "o", "u", "a", "a", "i", "o", "u", "A"};
 
-	private Lemmatizer() {
+	public Lemmatizer() {
 		dictionary = POSLemmaList.getInstance().getDictionary();
 		results = new HashMap<String, Integer>();
 	}
 
-	public static Lemmatizer getInstance() {
-		if (instance == null) {
-			instance = new Lemmatizer();
-		}
-		return instance;
-	}
-
 	public void lemmatize(File input) {
-
+		
 		results.clear();
 		unknown = 0; // resetira broj nepoznatih oblika
 
@@ -107,7 +101,7 @@ public final class Lemmatizer {
 			}
 		}
 		printResults();
-		System.out.println("Number of unknown forms: " + unknown);
+//		System.out.println("Number of unknown forms: " + unknown);
 	}
 
 	private String normalize(String line) {
@@ -171,16 +165,13 @@ public final class Lemmatizer {
 		private static List<String> forms;
 		private static List<String> lines;
 
-		private static POSLemmaList instance;
+		private static final POSLemmaList instance = new POSLemmaList();
 
 		private POSLemmaList() {
 			buildDictionary(new File(dirBaza));
 		}
 
 		public static POSLemmaList getInstance() {
-			if (instance == null) {
-				instance = new POSLemmaList();
-			}
 			return instance;
 		}
 

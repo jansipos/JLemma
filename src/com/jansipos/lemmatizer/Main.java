@@ -14,19 +14,20 @@ import javafx.scene.layout.StackPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
+
+
 public class Main extends Application {
 
 	private static String initialDir = "res/text/test";
 	private static Button button;
 	private static File chosenFolder;
-	
+
+	Lemmatizer l = new Lemmatizer();
+
 	private static final int WIDTH = 500;
 	private static final int HEIGHT = 100;
-	
-	private static Lemmatizer lemmatizer;
 
 	public static void main(String[] args) throws Exception {
-		lemmatizer = Lemmatizer.getInstance();
 		launch(args);
 	}
 
@@ -45,9 +46,11 @@ public class Main extends Application {
 			List<File> chosenFiles = fc.showOpenMultipleDialog(primaryStage);
 
 			if (chosenFiles != null && !chosenFiles.isEmpty()) {
+
 				chosenFolder = chosenFiles.get(0).getParentFile();
-				
-				chosenFiles.forEach(f -> lemmatizer.lemmatize(f));
+
+				chosenFiles.forEach(f -> l.lemmatize(f));
+
 				displayDialogAndFiles();
 			}
 		});
@@ -63,19 +66,19 @@ public class Main extends Application {
 	}
 
 	private void displayDialogAndFiles() {
-		
+
 		Alert alert = new Alert(AlertType.INFORMATION);
-		
+
 		alert.setTitle("Result");
 		alert.setHeaderText("Lemmatization complete");
 		alert.setContentText("Done!");
 
 		alert.showAndWait();
-		
+
 		// otvara fajlove s rezultatima u sistemskom file browseru
 		try {
 			if (Desktop.isDesktopSupported()) {
-			    Desktop.getDesktop().open(new File(chosenFolder.toString() + "/out"));
+				Desktop.getDesktop().open(new File(chosenFolder.toString() + "/out"));
 			}
 		} catch (IOException e) {
 			System.out.println("Unable to open file browser: " + e.getMessage());
